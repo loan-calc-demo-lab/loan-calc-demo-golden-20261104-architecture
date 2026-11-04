@@ -3,7 +3,7 @@ info:
   title: Lending Top-up API
   version: "1"
 paths:
-  /loans//topup-offers:
+  /loans/{loan_id}/topup-offers:
     post:
       summary: Request a top-up offer
       requestBody:
@@ -81,7 +81,7 @@ paths:
                     type: string
                   field:
                     type: string
-  /topup-offers//accept:
+  /topup-offers/{offer_id}/accept:
     post:
       summary: Accept a top-up offer
       parameters:
