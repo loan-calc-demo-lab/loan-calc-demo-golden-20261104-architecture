@@ -1,0 +1,55 @@
+# Application inventory (demo, fictional). Owned by Enterprise Architecture; each entry is confirmed by the owning
+# team. "repository" is the domain repository of a demo run (loan-calc-demo-<run>-<repository>); "none" means the
+# application exists but is not part of the demo.
+# An entry with last_reviewed older than 12 months must be confirmed with its owner before it is relied on.
+
+applications:
+  - id: mobile-banking-ios
+    name: Mobile banking app (iOS)
+    domain: Digital Platforms
+    team: Digital Mobile
+    owner_role: Digital Mobile tech lead
+    technology: Swift, SwiftUI
+    repository: digital
+    depends_on: [loan-service]
+    last_reviewed: 2026-10-15
+
+  - id: mobile-banking-android
+    name: Mobile banking app (Android)
+    domain: Digital Platforms
+    team: Digital Mobile
+    owner_role: Digital Mobile tech lead
+    technology: Kotlin, Jetpack Compose
+    repository: none
+    depends_on: [loan-service]
+    last_reviewed: 2026-10-15
+
+  - id: web-banking
+    name: Web banking
+    domain: Digital Platforms
+    team: Digital Web
+    owner_role: Digital Web tech lead
+    technology: Angular, .NET Core back end
+    repository: none
+    depends_on: [account-service]
+    last_reviewed: 2026-09-30
+
+  - id: loan-service
+    name: Loan service (quotes, existing loans, loan changes; system of record for personal loans in the demo)
+    domain: Lending
+    team: Lending Services
+    owner_role: Lending tech lead
+    technology: Rust (axum) on Code Engine (stands in for Fuse/Quarkus on OpenShift)
+    repository: lending
+    depends_on: []
+    last_reviewed: 2026-10-20
+
+  - id: account-service
+    name: Account service (current accounts, balances, credits)
+    domain: Deposits
+    team: Deposits Services
+    owner_role: Deposits tech lead
+    technology: Rust (axum) on Code Engine (stands in for Fuse/Quarkus on OpenShift)
+    repository: deposits
+    depends_on: []
+    last_reviewed: 2024-02-12

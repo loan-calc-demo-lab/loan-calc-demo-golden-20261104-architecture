@@ -1,0 +1,28 @@
+# Interface catalogue (demo, fictional). Every interface between applications is listed here with its contract.
+# A change to an interface, or a new one, is designed in this repository first (contract first) and approved by an
+# architect before any domain implements it.
+
+interfaces:
+  - id: lending-quote-v1
+    provider: loan-service
+    consumers: [mobile-banking-ios, mobile-banking-android]
+    operations: ["POST /loan/quote"]
+    contract: interfaces/lending-quote-v1.yaml
+    status: active
+    last_reviewed: 2026-10-20
+
+  - id: lending-customer-loans-v1
+    provider: loan-service
+    consumers: [mobile-banking-ios, mobile-banking-android]
+    operations: ["GET /customers/{customer_id}/loans"]
+    contract: interfaces/lending-customer-loans-v1.yaml
+    status: active
+    last_reviewed: 2026-10-20
+
+  - id: deposits-accounts-v1
+    provider: account-service
+    consumers: [web-banking]
+    operations: ["GET /v1/accounts/{account_id}/balance"]
+    contract: interfaces/deposits-accounts-v1.yaml
+    status: active
+    last_reviewed: 2024-02-12

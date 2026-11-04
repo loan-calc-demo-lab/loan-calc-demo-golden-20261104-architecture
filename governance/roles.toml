@@ -1,0 +1,22 @@
+# Who may do what in this repository (demo). Read from `main` only; agents cannot change governance/.
+#
+# - operators: may start agent runs in watsonx Orchestrate (matched by Orchestrate sign-in e-mail).
+# - product_owners: answer the analyst's questions (gate A) and approve the requirements (gate B, PR from requirements/*).
+# - architects: approve the design: impact analysis, high-level design and interfaces (gate D, PR from design/*).
+# - approvers: approve any other pull request in this repository (e.g. end-to-end test scenarios, PR from e2e/*).
+
+[settings]
+# Demo only: one person holds every role, so self-approval is allowed and shown as a warning.
+allow_self_approval = true
+
+[operators]
+users = [ { name = "Karoly Olah", github = "karoly", email = "karoly_olah@epam.com" } ]
+
+[product_owners]
+users = [ { name = "Karoly Olah", github = "karoly", email = "karoly_olah@epam.com" } ]
+
+[architects]
+users = [ { name = "Karoly Olah", github = "karoly", email = "karoly_olah@epam.com" } ]
+
+[approvers]
+users = [ { name = "Karoly Olah", github = "karoly", email = "karoly_olah@epam.com" } ]
