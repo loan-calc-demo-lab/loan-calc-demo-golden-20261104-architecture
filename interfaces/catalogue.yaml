@@ -26,3 +26,19 @@ interfaces:
     contract: interfaces/deposits-accounts-v1.yaml
     status: active
     last_reviewed: 2024-02-12
+
+  - id: lending-topup-v1
+    provider: loan-service
+    consumers: [mobile-banking-ios, mobile-banking-android]
+    operations: ["POST /loans/{loan_id}/topup-offers", "POST /topup-offers/{offer_id}/accept"]
+    contract: interfaces/lending-topup-v1.yaml
+    status: proposed
+    last_reviewed: 2026-11-04
+
+  - id: deposits-payouts-v1
+    provider: account-service
+    consumers: [loan-service]
+    operations: ["POST /payouts"]
+    contract: interfaces/deposits-payouts-v1.yaml
+    status: proposed
+    last_reviewed: 2026-11-04

@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  title: Lending Top-up API
+  version: "1"
+paths:
+  /loans/{loan_id}/topup-offers:
+    post:
+      summary: Request a top-up offer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [customer_id, topup_amount, term_months]
+              properties:
+                customer_id:
+                  type: string
+                topup_amount:
+                  type: number
+                term_months:
+                  type: integer
+      responses:
+        '201':
+          description: Indicative offer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offer_id:
+                    type: string
+                  loan_id:
+                    type: string
+                  customer_id:
+                    type: string
+                  indicative:
+                    type: boolean
+                    enum: [true]
+                  label:
+                    type: string
+                    example: Indicative offer – subject to final checks
+                  topup_amount:
+                    type: number
+                  term_months:
+                    type: integer
+                  new_loan_amount:
+                    type: number
+                  annual_rate_pct:
+                    type: number
+                  arrangement_fee:
+                    type: number
+                  amount_paid_out:
+                    type: number
+                  monthly_payment:
+                    type: number
+                  apr_pct:
+                    type: number
+                  total_cost_of_credit:
+                    type: number
+                  total_payable:
+                    type: number
+                  created_at:
+                    type: string
+                    format: date-time
+                  valid_until:
+                    type: string
+                    format: date-time
+        '404':
+          description: Unknown loan or not the customer's loan
+        '422':
+          description: Not eligible or out of range
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  field:
+                    type: string
+  /topup-offers/{offer_id}/accept:
+    post:
+      summary: Accept a top-up offer
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Acceptance result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offer_id:
+                    type: string
+                  loan_id:
+                    type: string
+                  status:
+                    type: string
+                    enum: [accepted]
+                  accepted_at:
+                    type: string
+                    format: date-time
+                  amount_paid_in:
+                    type: number
+                  account_id:
+                    type: string
+                  new_monthly_payment:
+                    type: number
+                  first_payment_date:
+                    type: string
+                    format: date
+                  payout_id:
+                    type: string
+                  withdrawal_reminder:
+                    type: string
+        '404':
+          description: Unknown offer
+        '409':
+          description: Idempotency-Key conflict with different offer or customer
+        '410':
+          description: Offer expired
+        '422':
+          description: Loan no longer eligible
+        '503':
+          description: Payout not confirmed, retry with same key
