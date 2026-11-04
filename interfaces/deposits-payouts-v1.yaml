@@ -51,6 +51,8 @@ paths:
           description: Idempotent repeat, same result, no additional credit
         '404':
           description: Unknown account
+        '400':
+          description: Idempotency-Key header missing or empty
         '409':
           description: Idempotency-Key conflict with different body
         '422':
