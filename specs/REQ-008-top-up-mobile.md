@@ -31,9 +31,32 @@ As a personal-loan customer, I want to request a top-up from the mobile app, see
 - APR 10.5 %
 - total cost of credit €3,840.05
 - total payable €17,780.32
+- label "Indicative offer – subject to final checks"
 as per **Top-up reference value R1**.
-**AC6 (US2)** Given a top-up request of €7,000 for 72 months (reference R2), when eligibility is met, then the indicative offer displays the figures from **Top-up reference value R2**.
-**AC7 (US2)** Given a top-up request of €1,000 for 48 months (reference R3), when eligibility is met, then the indicative offer displays the figures from **Top-up reference value R3**.
+**AC6 (US2)** Given a top-up request of €7,000 for 72 months (reference R2), when eligibility is met, then the indicative offer displays:
+- top-up amount €7,000
+- term 72 months
+- new loan amount €15,940.27
+- rate 8.9 %
+- arrangement fee €70.00
+- amount paid out €6,930.00
+- monthly payment €286.54
+- APR 9.4 %
+- total cost of credit €4,760.72
+- total payable €20,700.99
+as per **Top-up reference value R2**.
+**AC7 (US2)** Given a top-up request of €1,000 for 48 months (reference R3), when eligibility is met, then the indicative offer displays:
+- top-up amount €1,000
+- term 48 months
+- new loan amount €9,940.27
+- rate 9.9 %
+- arrangement fee €50.00
+- amount paid out €950.00
+- monthly payment €251.63
+- APR 10.7 %
+- total cost of credit €2,188.19
+- total payable €12,128.46
+as per **Top-up reference value R3**.
 **AC8 (US2)** Given a top-up amount outside €1,000-€20,000, when the customer enters the amount, then the system shows *Customer message TU-2a* "Please choose a top-up amount between €1,000 and €20,000.".
 **AC9 (US2)** Given a new loan amount that would exceed €30,000, when the calculation is performed, then the system shows *Customer message TU-2b* "The new loan amount can be at most €30,000.".
 **AC10 (US2)** Given a term outside 12-84 months, when the customer selects the term, then the system shows *Customer message TU-2c* "Please choose a term between 12 and 84 months.".
