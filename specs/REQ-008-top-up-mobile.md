@@ -67,7 +67,8 @@ as per **Top-up reference value R3**.
 - deducts the arrangement fee from the payout
 - credits the net amount to the repayment account (e.g., account balance after payout R1: €6,200.00)
 - creates a new loan with the combined amount and new monthly payment
-- shows a confirmation containing the amount paid in, the account, the new monthly payment, the first payment date and a 14-day withdrawal reminder (TU-5f).
+- shows a confirmation containing the amount paid in, the account, the new monthly payment, the first payment date and a 14-day withdrawal reminder (TU-5f)
+- stores the offer details as shown and the acceptance timestamp (REG-5).
 
 **AC13 (US5)** Given the customer attempts to accept the same offer a second time, when the second acceptance is received, then the system returns the result of the first acceptance and no additional payout occurs (TU-5e).
 
