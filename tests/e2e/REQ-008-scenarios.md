@@ -1,64 +1,53 @@
 ## Scope and environment
 
-- Pre-production test environment with the three services (Lending, Deposits, Digital) deployed.
-- Only test customers are used, no real customer data.
+Pre-production test environment with the three services (Lending, Deposits, Digital) deployed. Only test customers are used; no real customer data is involved.
 
 ## Test data
 
-| Customer | Loan | Account | Status |
-|----------|------|---------|--------|
-| CUST-1001 | PL-1001 | CA-2001 | eligible (outstanding €8,940.27, balance €1,250.00) |
-| CUST-1002 | PL-1002 | CA-2002 | in arrears |
-| CUST-1003 | PL-1003 | CA-2003 | too new (3 payments) |
+- Eligible customer: CUST-1001, loan PL-1001 (outstanding €8,940.27), account CA-2001 (balance €1,250.00)
+- Customer in arrears: CUST-1002, loan PL-1002, account CA-2002
+- Too new (only 3 payments made): CUST-1003, loan PL-1003, account CA-2003
 
 ## Scenarios
 
-### E2E-1 Happy path – top-up R1
-**Given** the customer CUST-1001 requests a top-up of €5,000 for loan PL-1001.
-**When** the request is processed through the Digital API, which calls Lending to create an offer and then Deposits to payout.
-**Then** the offer is accepted, the payout of €4,950 is made, and the account balance becomes €6,200.
-- Covers AC1, AC2, AC5 (offer details), AC7 (payout amount), AC9 (new balance).
+### E2E-1: Happy path – top-up offer accepted (R1)
+**Given** the customer CUST-1001 requests a top-up of €5,000 for loan PL-1001
+**When** the Lending service returns an offer (R1) and the Digital app accepts it
+**Then** the Deposits service processes a payout of €4,950.00, the account CA-2001 balance becomes €6,200.00, and the app shows the offer and confirmation screens with the exact figures from the rulebook (monthly payment €295.50, APR 10.5%, total cost of credit €3,500.00, etc.)
 
-### E2E-2 Not eligible – arrears
-**Given** the customer CUST-1002 requests a top-up.
-**When** the request reaches Lending.
-**Then** Lending returns status 422 with message "Customer is in arrears" (TU-2a).
-- Covers AC3.
+### E2E-2: Customer not eligible – arrears
+**Given** the customer CUST-1002 requests a top-up
+**When** the Lending service evaluates eligibility and returns a 422 error with message "TU-2a: Customer in arrears"
+**Then** the Digital app displays the error message and no payout is attempted.
 
-### E2E-3 Offer expired
-**Given** an offer was created for CUST-1001 and 24 h + 1 s have passed.
-**When** the customer tries to accept the offer.
-**Then** Lending returns status 410 with message "Offer expired" (TU-4c).
-- Covers AC6.
+### E2E-3: Offer expired
+**Given** the customer CUST-1001 receives an offer
+**When** more than 24 h passes before acceptance (state.advance_clock(24*3600+1) in Lending)
+**Then** the acceptance request returns a 410 error with message "TU-4c: Offer expired" and the app shows the appropriate error.
 
-### E2E-4 Accept twice – only one payout
-**Given** a valid offer exists for CUST-1001.
-**When** the customer accepts the offer twice (duplicate Idempotency-Key).
-**Then** the first acceptance triggers a payout of €4,950, the second is ignored and no second payout occurs.
-- Covers AC8.
+### E2E-4: Accept twice – only one payout
+**Given** the customer CUST-1001 accepts the same offer twice
+**When** the first acceptance triggers a payout and the second acceptance is processed
+**Then** the second acceptance returns a 409 conflict (or similar) and no second payout occurs; the account balance remains €6,200.00.
 
-### E2E-5 Deposits unavailable during accept
-**Given** a valid offer exists for CUST-1001.
-**When** the customer accepts the offer but the Deposits service is down.
-**Then** Lending returns status 502 and no payout is recorded; a retry after Deposits is back up still results in a single payout.
-- Covers AC8 (retry safety).
+### E2E-5: Deposits unavailable during accept
+**Given** the Deposits service is down when the Digital app attempts to accept an offer
+**When** the acceptance request fails due to Deposits unavailability
+**Then** the app retries or fails gracefully, but only one payout is ever made (no double payout on retry).
 
 ## Coverage
 
 | AC | E2E scenario |
 |----|--------------|
-| AC1 | E2E-1 |
-| AC2 | E2E-1 |
-| AC3 | E2E-2 |
-| AC4 | E2E-1 |
-| AC5 | E2E-1 |
-| AC6 | E2E-3 |
-| AC7 | E2E-1 |
-| AC8 | E2E-4, E2E-5 |
-| AC9 | E2E-1 |
+| AC1 (eligible offer) | E2E-1 |
+| AC2 (arrears) | E2E-2 |
+| AC3 (offer expiry) | E2E-3 |
+| AC4 (double accept) | E2E-4 |
+| AC5 (deposits down) | E2E-5 |
 
 ## Entry and exit criteria
 
-- All services start without errors.
-- All scenarios execute against the test environment and produce the expected HTTP status codes and payloads.
-- No unexpected side effects (e.g., duplicate payouts) are observed.
+- All services are reachable and return the expected contract responses.
+- The Digital app correctly renders offer and confirmation screens with the exact figures.
+- Error messages match the rulebook texts word for word.
+- No duplicate payouts are recorded in the Lending payout client.
